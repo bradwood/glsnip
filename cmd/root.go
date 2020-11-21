@@ -15,10 +15,20 @@ var cfgFile string
 var rootCmd = &cobra.Command{
 	Use:   "glsnip",
 	Short: "Copy and Paste using GitLab Snippets",
-	Long: `This app behaves like pbcopy(1) and pbpaste(1) on
-a Mac, or like xclip(1) on Linux, except, instead of using a local
-clipboard, it uses GitLab Snippets.`,
-	Run: func(cmd *cobra.Command, args []string) {},
+	Long: `This app behaves like pbcopy(1) and pbpaste(1) on a Mac, or like xclip(1) on
+Linux, except, instead of using a local clipboard, it uses GitLab Snippets.
+
+Configuration:
+  Create a YAML-formatted config file at $HOME/.glsnip like this:
+
+    gitlab_url: https://url.of.gitlab.server/
+    token: USERTOKEN
+
+Environment variables:
+  Instead of using a configuration file, you may set environment variables by
+  prefixing the key in the configuration file with GLSNIP_ and then converting
+  all alphabetic characters to UPPERCASE.`,
+	Version: "0.0.1",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -32,16 +42,7 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
-
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.glsnip.yaml)")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "config file (default $HOME/.glsnip)")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -60,12 +61,16 @@ func initConfig() {
 		// Search config in home directory with name ".glsnip" (without extension).
 		viper.AddConfigPath(home)
 		viper.SetConfigName(".glsnip")
+		viper.SetConfigType("yaml")
 	}
 
+	viper.SetEnvPrefix("glsnip")
 	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
-	}
+	viper.ReadInConfig()
+
+	// if err := viper.ReadInConfig(); err == nil {
+	// 	fmt.Println("Using config file:", viper.ConfigFileUsed())
+	// }
 }
