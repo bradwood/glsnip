@@ -13,8 +13,9 @@ var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "glsnip",
-	Short: "Copy and Paste using GitLab Snippets",
+	Version: "0.0.1",
+	Use:     "glsnip",
+	Short:   "Copy and Paste using GitLab Snippets",
 	Long: `This app behaves like pbcopy(1) and pbpaste(1) on a Mac, or like xclip(1) on
 Linux, except, instead of using a local clipboard, it uses GitLab Snippets.
 
@@ -29,7 +30,6 @@ Environment variables:
   Instead of using a configuration file, you may set environment variables by
   prefixing the key in the configuration file with GLSNIP_ and then converting
   all alphabetic characters to UPPERCASE.`,
-	Version: "0.0.1",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -74,6 +74,6 @@ func initConfig() {
 	viper.ReadInConfig()
 
 	// if err := viper.ReadInConfig(); err == nil {
-	// 	fmt.Println("Using config file:", viper.ConfigFileUsed())
+	//	fmt.Println("Using config file:", viper.ConfigFileUsed())
 	// }
 }
