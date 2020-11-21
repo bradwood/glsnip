@@ -23,6 +23,7 @@ Configuration:
 
     gitlab_url: https://url.of.gitlab.server/
     token: USERTOKEN
+    clipboard_name: glsnip
 
 Environment variables:
   Instead of using a configuration file, you may set environment variables by
@@ -62,6 +63,8 @@ func initConfig() {
 		viper.AddConfigPath(home)
 		viper.SetConfigName(".glsnip")
 		viper.SetConfigType("yaml")
+
+		viper.SetDefault("clipboard_name", "glsnip")
 	}
 
 	viper.SetEnvPrefix("glsnip")

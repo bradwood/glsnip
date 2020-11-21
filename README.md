@@ -18,11 +18,12 @@ settings.
 
 ### Configuration file
 
-Create a yaml-formatted file in your $HOME directory called `.pbsnip` as
+Create a yaml-formatted file in your $HOME directory called `.glsnip` as
 follows:
 ```yaml
 gitlab_url: https://gitlab.com
 token: xxxx
+clipboard_name: glsnip
 ```
 You may also specify an alternative location for the configuration file with the
 `--config` flag.
@@ -39,14 +40,15 @@ export GLSNIP_TOKEN=xxxx
 
 Copying examples:
 ```shell
-pbsnip copy <some_file.txt
-ls | pbsnip copy
+glsnip copy <some_file.txt
+ls | glsnip copy
+ls | GLSNIP_GITLAB_URL=https://blah.com GLSNIP_TOKEN=xxx glsnip copy
 ```
 
 Pasting examples:
 ```shell
-pbsnip paste   # paste to STDOUT
-pbsnip paste > myfile.txt
-pbsnip paste | less
+glsnip paste   # paste to STDOUT
+glsnip paste > myfile.txt
+glsnip paste | less
 ```
 
