@@ -1,5 +1,7 @@
 # glsnip
 
+![glsnip logo](.github/glsnip-logo.png?raw=true)
+
 Copy-paste across machines using [GitLab
 Snippets](https://docs.gitlab.com/ee/user/snippets.html) as a storage backend.
 
@@ -8,7 +10,10 @@ but designed to work across machines.
 
 ## Installation
 
-TBC
+If you have Go installed `go get github.com/bradwood/glsnip`.
+
+Alternatively, you can download a binary from the [Releases
+page](https://github.com/bradwood/glsnip/releases)
 
 ## Configuration
 
