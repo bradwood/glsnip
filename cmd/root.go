@@ -13,7 +13,7 @@ var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Version: "0.0.1",
+	Version: "0.0.2",
 	Use:     "glsnip",
 	Short:   "Copy and Paste using GitLab Snippets",
 	Long: `This app behaves like pbcopy(1) and pbpaste(1) on a Mac, or like xclip(1) on
