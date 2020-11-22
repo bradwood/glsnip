@@ -57,3 +57,6 @@ glsnip paste > myfile.txt
 glsnip paste | less
 ```
 
+## Contributions
+
+Contributions are welcome, please feel free to raise a PR or issue.
