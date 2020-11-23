@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -12,34 +11,32 @@ import (
 var pasteCmd = &cobra.Command{
 	Use:   "paste",
 	Short: "Paste GitLab Snippet to STDOUT",
-	Run:   paste,
+	Args:  cobra.NoArgs,
+	Run:   Paste,
 }
 
 func init() {
 	rootCmd.AddCommand(pasteCmd)
 }
 
-func paste(cmd *cobra.Command, args []string) {
+// Paste implements the paste command
+func Paste(cmd *cobra.Command, args []string) {
+	git := GetGitlabClient()
+	paste(args, git)
+}
 
-	git, err := gitlab.NewClient(viper.GetString("token"), gitlab.WithBaseURL(viper.GetString("gitlab_url")))
-
-	if err != nil {
-		log.Fatalf("Failed connect to GitLab: %v", err)
-	}
+// TODO: write test for this
+func paste(args []string, git gitlab.Client) {
 
 	snippets, _, err := git.Snippets.ListSnippets(&gitlab.ListSnippetsOptions{})
 
-	if err != nil {
-		log.Fatal(err)
-	}
+	BailOnError(err)
 
 	for _, item := range snippets {
 
 		if item.Title == viper.GetString("clipboard_name") {
 			snip, _, err := git.Snippets.SnippetContent(item.ID)
-			if err != nil {
-				log.Fatal(err)
-			}
+			BailOnError(err)
 			fmt.Print(string(snip))
 			break
 		}
