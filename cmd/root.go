@@ -31,6 +31,7 @@ Environment variables:
   all alphabetic characters to UPPERCASE.`,
 }
 
+// Execute runs the cli's main root command
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)

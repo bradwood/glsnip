@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"log"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -15,15 +14,22 @@ import (
 var copyCmd = &cobra.Command{
 	Use:   "copy",
 	Short: "Copy GitLab Snippet from STDIN",
-	Run:   copy,
+	Args:  cobra.NoArgs,
+	Run:   Copy,
 }
 
 func init() {
 	rootCmd.AddCommand(copyCmd)
 }
 
-// TODO: do we even need args here?
-func copy(cmd *cobra.Command, args []string) {
+// Copy implements the copy command
+func Copy(cmd *cobra.Command, args []string) {
+	git := GetGitlabClient()
+	copy(args, &git)
+}
+
+// TODO: write test for this
+func copy(args []string, git *gitlab.Client) {
 
 	stat, _ := os.Stdin.Stat()
 
@@ -41,44 +47,36 @@ func copy(cmd *cobra.Command, args []string) {
 			output = append(output, input)
 		}
 
-		// connect to gitlab
-		git, err := gitlab.NewClient(viper.GetString("token"), gitlab.WithBaseURL(viper.GetString("gitlab_url")))
-
-		if err != nil {
-			log.Fatalf("Failed connect to GitLab: %v", err)
-		}
-
 		// search snippets for a clipboard with the correct name to update
 		snippets, _, err := git.Snippets.ListSnippets(&gitlab.ListSnippetsOptions{})
 
-		if err != nil {
-			log.Fatal(err)
-		}
+		BailOnError(err)
 
-		var clipboard_found bool = false
-		var clipboard_id int
+		var clipboardFound bool = false
+		var clipboardID int
 
 		for _, item := range snippets {
 
 			if item.Title == viper.GetString("clipboard_name") {
-				clipboard_found = true
-				clipboard_id = item.ID
+				clipboardFound = true
+				clipboardID = item.ID
 				break
 			}
 		}
 
 		// create a new snippet
-		if !clipboard_found {
+		if !clipboardFound {
 			snippetoptions := &gitlab.CreateSnippetOptions{
 				Title:      gitlab.String(viper.GetString("clipboard_name")),
 				FileName:   gitlab.String(viper.GetString("clipboard_name")),
 				Content:    gitlab.String(string(output)),
 				Visibility: gitlab.Visibility(gitlab.PrivateVisibility),
 			}
+
 			_, _, err = git.Snippets.CreateSnippet(snippetoptions)
-			if err != nil {
-				log.Fatal(err)
-			}
+
+			BailOnError(err)
+
 		} else { // update existing snippet
 			snippetoptions := &gitlab.UpdateSnippetOptions{
 				Title:      gitlab.String(viper.GetString("clipboard_name")),
@@ -86,10 +84,10 @@ func copy(cmd *cobra.Command, args []string) {
 				Content:    gitlab.String(string(output)),
 				Visibility: gitlab.Visibility(gitlab.PrivateVisibility),
 			}
-			_, _, err = git.Snippets.UpdateSnippet(clipboard_id, snippetoptions)
-			if err != nil {
-				log.Fatal(err)
-			}
+
+			_, _, err = git.Snippets.UpdateSnippet(clipboardID, snippetoptions)
+
+			BailOnError(err)
 		}
 
 	} else {
