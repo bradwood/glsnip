@@ -22,11 +22,13 @@ func init() {
 // Paste implements the paste command
 func Paste(cmd *cobra.Command, args []string) {
 	git := GetGitlabClient()
-	paste(args, git)
+	output := paste(args, git, viper.GetString("clipboard_name"))
+	fmt.Print(output)
 }
 
-// TODO: write test for this
-func paste(args []string, git gitlab.Client) {
+func paste(args []string, git gitlab.Client, clipboardName string) string {
+
+	var output string
 
 	snippets, _, err := git.Snippets.ListSnippets(&gitlab.ListSnippetsOptions{})
 
@@ -34,12 +36,13 @@ func paste(args []string, git gitlab.Client) {
 
 	for _, item := range snippets {
 
-		if item.Title == viper.GetString("clipboard_name") {
+		if item.Title == clipboardName {
 			snip, _, err := git.Snippets.SnippetContent(item.ID)
 			BailOnError(err)
-			fmt.Print(string(snip))
+			output = string(snip)
 			break
 		}
 	}
 
+	return output
 }
