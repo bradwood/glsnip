@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"bufio"
-	"fmt"
 	"io"
 	"os"
 
@@ -37,7 +36,7 @@ func Copy(cmd *cobra.Command, args []string) {
 		reader := bufio.NewReader(os.Stdin)
 		copy(args, git, viper.GetString("clipboard_name"), reader)
 	} else { // invoked without a pipe or redirect
-		fmt.Println("ERROR: Please pipe something into STDIN")
+		println("ERROR: Please pipe something into STDIN")
 		os.Exit(1)
 	}
 }
@@ -45,7 +44,6 @@ func Copy(cmd *cobra.Command, args []string) {
 func copy(args []string, git gitlab.Client, clipboardName string, reader RuneReader) {
 
 	// read stdin
-	// reader := bufio.NewReader(os.Stdin)
 	var output []rune
 
 	for {

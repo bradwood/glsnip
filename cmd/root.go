@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 
 	homedir "github.com/mitchellh/go-homedir"
@@ -34,7 +33,7 @@ Environment variables:
 // Execute runs the cli's main root command
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
+		println(err)
 		os.Exit(1)
 	}
 }
@@ -50,7 +49,7 @@ func initConfig() {
 	} else {
 		home, err := homedir.Dir()
 		if err != nil {
-			fmt.Println(err)
+			println(err)
 			os.Exit(1)
 		}
 
