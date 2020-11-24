@@ -1,4 +1,4 @@
-# glsnip
+[![Go Report Card](https://goreportcard.com/badge/github.com/bradwood/glsnip)](https://goreportcard.com/report/github.com/bradwood/glsnip)
 
 ![glsnip logo](.github/glsnip-logo.png?raw=true)
 
