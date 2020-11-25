@@ -1,4 +1,6 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/bradwood/glsnip)](https://goreportcard.com/report/github.com/bradwood/glsnip)
+![Go](https://github.com/bradwood/glsnip/workflows/Go/badge.svg)
+![Release](https://github.com/bradwood/glsnip/workflows/Release/badge.svg)
 
 ![glsnip logo](.github/glsnip-logo.png?raw=true)
 
