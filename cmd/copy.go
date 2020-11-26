@@ -57,7 +57,7 @@ func copy(args []string, git gitlab.Client, clipboardName string, reader RuneRea
 	// search snippets for a clipboard with the correct name to update
 	snippets, _, err := git.Snippets.ListSnippets(&gitlab.ListSnippetsOptions{})
 
-	BailOnError(err)
+	BailOnError(err, "Could not read Snippets")
 
 	var clipboardFound bool = false
 	var clipboardID int
@@ -82,7 +82,7 @@ func copy(args []string, git gitlab.Client, clipboardName string, reader RuneRea
 
 		_, _, err = git.Snippets.CreateSnippet(snippetoptions)
 
-		BailOnError(err)
+		BailOnError(err, "Could not create Snippet")
 
 	} else { // update existing snippet
 		snippetoptions := &gitlab.UpdateSnippetOptions{
@@ -94,7 +94,7 @@ func copy(args []string, git gitlab.Client, clipboardName string, reader RuneRea
 
 		_, _, err = git.Snippets.UpdateSnippet(clipboardID, snippetoptions)
 
-		BailOnError(err)
+		BailOnError(err, "Could not update snippet")
 	}
 
 }
