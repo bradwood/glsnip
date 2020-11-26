@@ -114,9 +114,9 @@ func initConfig() {
 	viper.AutomaticEnv()
 
 	if !viper.IsSet("gitlab_url") {
-		BailOnError(errors.New("Bad GitLab server URL"), "Bad GitLab server URL")
+		BailOnError(errors.New("Bad or missing GitLab server URL"), "Bad or missing GitLab server URL")
 	}
 	if !viper.IsSet("token") {
-		BailOnError(errors.New("Bad GitLab server token"), "Bad GitLab server token")
+		BailOnError(errors.New("Bad or missing GitLab server token"), "Bad or missing GitLab server token")
 	}
 }
