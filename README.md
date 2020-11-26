@@ -25,17 +25,41 @@ settings.
 
 ### Configuration file
 
-Create a yaml-formatted file in your $HOME directory called `.glsnip` as
-follows:
+Create a YAML-formatted config file (default location `$HOME/.glsnip`). You must
+include at least a single server profile YAML block called `default`, like this:
+
 ```yaml
-gitlab_url: https://gitlab.com
-token: xxxx
-clipboard_name: glsnip
+---
+default:
+  gitlab_url: https://url.of.gitlab.server/
+  token: USERTOKEN
+  clipboard_name: glsnip
+...
 ```
+
+Multiple additional server profile blocks can be added using any block name,
+like this:
+
+```yaml
+...
+work:
+  gitlab_url: https://url.of.work.server/
+  token: USERTOKENWORK
+  clipboard_name: glsnip
+...
+```
+
 You may also specify an alternative location for the configuration file with the
 `--config` flag.
 
 ### Environment variables
+
+Instead of using a configuration file, you may set environment variables by
+prefixing the key in a configuration file block with `GLSNIP_` and then converting
+all alphabetic characters to UPPERCASE. Note that environment variables will
+override any configuration specified in the configuration file, regardless of
+the profile specified. You may specify a server profile by setting
+`GLSNIP_PROFILE`.
 
 You can set environment variables as follows:
 ```shell
@@ -45,9 +69,12 @@ export GLSNIP_TOKEN=xxxx
 
 ## Usage
 
+To specify a non-`default` server profile use the `--profile` flag.
+
 Copying examples:
 ```shell
 glsnip copy <some_file.txt
+glsnip copy --profile work <some_file.txt  # copy to Snippet at on "work" GitLab server
 ls | glsnip copy
 ls | GLSNIP_GITLAB_URL=https://blah.com GLSNIP_TOKEN=xxx glsnip copy
 ```
@@ -56,6 +83,7 @@ Pasting examples:
 ```shell
 glsnip paste   # paste to STDOUT
 glsnip paste > myfile.txt
+glsnip paste --profile public > myfile.txt  # paste from public GitLab server
 glsnip paste | less
 ```
 
