@@ -32,13 +32,13 @@ func paste(args []string, git gitlab.Client, clipboardName string) string {
 
 	snippets, _, err := git.Snippets.ListSnippets(&gitlab.ListSnippetsOptions{})
 
-	BailOnError(err)
+	BailOnError(err, "Could not read Snippets")
 
 	for _, item := range snippets {
 
 		if item.Title == clipboardName {
 			snip, _, err := git.Snippets.SnippetContent(item.ID)
-			BailOnError(err)
+			BailOnError(err, "Could not read Snippet contents")
 			output = string(snip)
 			break
 		}
