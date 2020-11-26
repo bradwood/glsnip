@@ -119,9 +119,4 @@ func initConfig() {
 	if !viper.IsSet("token") {
 		BailOnError(errors.New("Bad GitLab server token"), "Bad GitLab server token")
 	}
-
-	// for i, k := range viper.AllKeys() {
-	// 	fmt.Println(i, k, viper.Get(k))
-	// }
-
 }
