@@ -12,7 +12,11 @@ import (
 	"testing"
 
 	retryablehttp "github.com/hashicorp/go-retryablehttp"
+	homedir "github.com/mitchellh/go-homedir"
 	"github.com/xanzy/go-gitlab"
+
+	"github.com/spf13/viper"
+	"github.com/stretchr/testify/assert"
 )
 
 // setup sets up a test HTTP server along with a gitlab.Client that is
@@ -76,10 +80,12 @@ func mustWriteHTTPResponse(t *testing.T, w io.Writer, fixturePath string) {
 	}
 }
 
+//TODO: is this needed
 func errorOption(*retryablehttp.Request) error {
 	return errors.New("RequestOptionFunc returns an error")
 }
 
+//TODO: is this needed
 func loadFixture(filePath string) []byte {
 	content, err := ioutil.ReadFile(filePath)
 	if err != nil {
@@ -87,4 +93,52 @@ func loadFixture(filePath string) []byte {
 	}
 
 	return content
+}
+
+func patchEnv(key, value string) func() {
+	bck := os.Getenv(key)
+	deferFunc := func() {
+		os.Setenv(key, bck)
+	}
+
+	if value != "" {
+		os.Setenv(key, value)
+	} else {
+		os.Unsetenv(key)
+	}
+
+	return deferFunc
+}
+
+func TestInitConfig(t *testing.T) {
+
+	// create HOME dir and associated env var
+	homeDir, _ := ioutil.TempDir("", "glsnip*")
+	// set up cleanup function for HOME dir
+	defer func() { os.RemoveAll(homeDir) }()
+
+	// set up homedir
+	defer patchEnv("HOME", homeDir)()
+
+	// don't cache the homedir for the duration of this test
+	homedir.DisableCache = true
+	defer func() { homedir.DisableCache = false }()
+
+	// inject  config file
+	confFile, _ := os.Create(homeDir + "/.glsnip")
+	confFile.WriteString(`
+default:
+  gitlab_url: https://some.url/
+  token: USERTOKEN
+`)
+	confFile.Close()
+	// inject flags
+	// inject env vars
+
+	println(os.Getenv("HOME"))
+	initConfig()
+
+	assert.Equal(t, viper.GetString("gitlab_url"), "https://some.url/")
+	// test values for viper
+
 }
