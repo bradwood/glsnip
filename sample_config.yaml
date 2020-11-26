@@ -1,3 +1,11 @@
-gitlab_url: "https://gitlab.com"
-token: xxxx
-clipboard_name: glsnip
+# The default server profile must be called "default". Subsequent server
+# profiles can be called whatever you like as long as they are valid YAML.
+
+default:
+  gitlab_url: https://gitlab.com
+  token: xxxx
+  clipboard_name: glsnip
+
+work:
+  gitlab_url: https://gitlab.work.com
+  token: yyyy
