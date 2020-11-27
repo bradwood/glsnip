@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"bufio"
+	"errors"
 	"io"
 	"os"
 
@@ -22,8 +23,11 @@ var copyCmd = &cobra.Command{
 	Run:   Copy,
 }
 
+var visibility string
+
 func init() {
 	rootCmd.AddCommand(copyCmd)
+	copyCmd.Flags().StringVarP(&visibility, "visibility", "v", "private", "visibility level")
 }
 
 // Copy implements the copy command
@@ -34,14 +38,14 @@ func Copy(cmd *cobra.Command, args []string) {
 
 	if (stat.Mode() & os.ModeCharDevice) == 0 { // we were piped into
 		reader := bufio.NewReader(os.Stdin)
-		copy(args, git, viper.GetString("clipboard_name"), reader)
+		copy(args, git, viper.GetString("clipboard_name"), visibility, reader)
 	} else { // invoked without a pipe or redirect
 		println("ERROR: Please pipe something into STDIN")
 		os.Exit(1)
 	}
 }
 
-func copy(args []string, git gitlab.Client, clipboardName string, reader RuneReader) {
+func copy(args []string, git gitlab.Client, clipboardName string, visibility string, reader RuneReader) {
 
 	// read stdin
 	var output []rune
@@ -52,6 +56,11 @@ func copy(args []string, git gitlab.Client, clipboardName string, reader RuneRea
 			break
 		}
 		output = append(output, input)
+	}
+
+	// check visibility
+	if (visibility != "private") && (visibility != "internal") && (visibility != "public") {
+		BailOnError(errors.New("Bad visibility"), "Bad visibility. Must be `private`, `internal or `public`")
 	}
 
 	// search snippets for a clipboard with the correct name to update
@@ -77,7 +86,7 @@ func copy(args []string, git gitlab.Client, clipboardName string, reader RuneRea
 			Title:      gitlab.String(clipboardName),
 			FileName:   gitlab.String(clipboardName),
 			Content:    gitlab.String(string(output)),
-			Visibility: gitlab.Visibility(gitlab.PrivateVisibility),
+			Visibility: gitlab.Visibility(gitlab.VisibilityValue(visibility)),
 		}
 
 		_, _, err = git.Snippets.CreateSnippet(snippetoptions)
@@ -89,7 +98,7 @@ func copy(args []string, git gitlab.Client, clipboardName string, reader RuneRea
 			Title:      gitlab.String(clipboardName),
 			FileName:   gitlab.String(clipboardName),
 			Content:    gitlab.String(string(output)),
-			Visibility: gitlab.Visibility(gitlab.PrivateVisibility),
+			Visibility: gitlab.Visibility(gitlab.VisibilityValue(visibility)),
 		}
 
 		_, _, err = git.Snippets.UpdateSnippet(clipboardID, snippetoptions)
