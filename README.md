@@ -68,6 +68,20 @@ export GLSNIP_GITLAB_URL=https://gitlab.com
 export GLSNIP_TOKEN=xxxx
 ```
 
+## Security & Privacy
+It goes without saying, be careful what you chose to copy, especially to public
+services like gitlab.com. Reasonable security can be achieved by using TLS
+(https) when defining your `gitlab_url` and relying on `glsnip` defaulting to
+GitLab's `private` visibility level which will create a snippet that only you
+can see.
+
+You may override the visibility setting by passing the `--visibility` flag when
+copying but this must be explicitly passed on every invocation. GitLab defines
+the `public` and `internal` visibility levels, both of which will work with
+`glsnip`, but note [this
+issue](https://gitlab.com/gitlab-org/gitlab/-/issues/12388) if you are wanting
+to use the `internal` option on public gitlab.com
+
 ## Usage
 
 To specify a non-`default` server profile use the `--profile` flag.
