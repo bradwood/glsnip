@@ -15,7 +15,7 @@ var cfgFile, profile string
 var cfgFileFound bool = true
 
 var rootCmd = &cobra.Command{
-	Version: "0.1.0",
+	Version: "0.1.1",
 	Use:     "glsnip",
 	Short:   "Copy and paste using GitLab Snippets",
 	Long: `This app behaves like pbcopy(1) and pbpaste(1) on a Mac, or like xclip(1) on
