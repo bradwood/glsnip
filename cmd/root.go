@@ -15,7 +15,7 @@ var cfgFile, profile string
 var cfgFileFound bool = true
 
 var rootCmd = &cobra.Command{
-	Version: "0.3.0",
+	Version: "0.3.1",
 	Use:     "glsnip",
 	Short:   "Copy and paste using GitLab Snippets",
 	Long: `This app behaves like pbcopy(1) and pbpaste(1) on a Mac, or like xclip(1) on
@@ -41,9 +41,12 @@ Configuration:
       gitlab_url: https://url.of.work.server/
       token: USERTOKENWORK
       clipboard_name: glsnip
-	  project_id: 12345678
+      project_id: 12345678
     ...
   
+  If you set the project_id in a server profile, a project-based Gitlab Snippet
+  API will be used.
+
   If you set the project_id in a server profile, a project-based Gitlab Snippet
   API will be used.
 
