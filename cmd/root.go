@@ -43,6 +43,9 @@ Configuration:
       clipboard_name: glsnip
       project_id: 12345678
     ...
+  
+  If you set the project_id in a server profile, a project-based Gitlab Snippet
+  API will be used.
 
   If you set the project_id in a server profile, a project-based Gitlab Snippet
   API will be used.
