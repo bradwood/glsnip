@@ -54,7 +54,7 @@ func TestCopyUpdate(t *testing.T) {
 
 	var emptyStringArray []string
 
-	copy(emptyStringArray, *client, "glsnip", "internal", bytes.NewBufferString("std in"))
+	copy(emptyStringArray, *client, "glsnip", -1, "internal", bytes.NewBufferString("std in"))
 
 }
 
@@ -102,6 +102,6 @@ func TestCopyCreate(t *testing.T) {
 
 	var emptyStringArray []string
 
-	copy(emptyStringArray, *client, "glsnip", "private", bytes.NewBufferString("std in"))
+	copy(emptyStringArray, *client, "glsnip", -1, "private", bytes.NewBufferString("std in"))
 
 }

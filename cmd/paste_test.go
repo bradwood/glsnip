@@ -24,7 +24,7 @@ func TestPaste(t *testing.T) {
 
 	var emptyStringArray []string
 
-	output := paste(emptyStringArray, *client, "glsnip")
+	output := paste(emptyStringArray, *client, "glsnip", -1)
 
 	assert.Equal(t, "PASTED_DATA", output)
 }
