@@ -22,27 +22,41 @@ func init() {
 // Paste implements the paste command
 func Paste(cmd *cobra.Command, args []string) {
 	git := GetGitlabClient()
-	output := paste(args, git, viper.GetString("clipboard_name"))
+	output := paste(args, git, viper.GetString("clipboard_name"), viper.GetInt("project_id"))
 	fmt.Print(output)
 }
 
-func paste(args []string, git gitlab.Client, clipboardName string) string {
+func paste(args []string, git gitlab.Client, clipboardName string, projectID int) string {
 
 	var output string
 
-	snippets, _, err := git.Snippets.ListSnippets(&gitlab.ListSnippetsOptions{})
+	if projectID > 0 { // Project Snippet
+		snippets, _, err := git.ProjectSnippets.ListSnippets(projectID, &gitlab.ListProjectSnippetsOptions{})
+		BailOnError(err, "Could not read Project Snippets")
+		for _, item := range snippets {
 
-	BailOnError(err, "Could not read Snippets")
-
-	for _, item := range snippets {
-
-		if item.Title == clipboardName {
-			snip, _, err := git.Snippets.SnippetContent(item.ID)
-			BailOnError(err, "Could not read Snippet contents")
-			output = string(snip)
-			break
+			if item.Title == clipboardName {
+				snip, _, err := git.Snippets.SnippetContent(item.ID)
+				BailOnError(err, "Could not read Snippet contents")
+				output = string(snip)
+				break
+			}
 		}
-	}
+		return output
 
-	return output
+	} else { // Personal Snippet
+		snippets, _, err := git.Snippets.ListSnippets(&gitlab.ListSnippetsOptions{})
+		BailOnError(err, "Could not read Personal Snippets")
+		for _, item := range snippets {
+
+			if item.Title == clipboardName {
+				snip, _, err := git.Snippets.SnippetContent(item.ID)
+				BailOnError(err, "Could not read Snippet contents")
+				output = string(snip)
+				break
+			}
+		}
+		return output
+
+	}
 }

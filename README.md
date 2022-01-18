@@ -47,8 +47,12 @@ work:
   gitlab_url: https://url.of.work.server/
   token: USERTOKENWORK
   clipboard_name: glsnip
+  project_id: 12345678
 ...
 ```
+
+If you set the project_id in a server profile, a project-based Gitlab Snippet
+API will be used.
 
 You may also specify an alternative location for the configuration file with the
 `--config` flag.
