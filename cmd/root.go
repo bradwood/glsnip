@@ -47,9 +47,6 @@ Configuration:
   If you set the project_id in a server profile, a project-based Gitlab Snippet
   API will be used.
 
-  If you set the project_id in a server profile, a project-based Gitlab Snippet
-  API will be used.
-
 Environment variables:
   Instead of using a configuration file, you may set environment variables by
   prefixing the key in a configuration file block with GLSNIP_ and then
